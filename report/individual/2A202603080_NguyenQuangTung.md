@@ -7,7 +7,7 @@
 - Email: nguyenquangtung753@gmail.com
 - Lớp: K5-L2A
 - Link repo bài làm: https://github.com/Nguyen-Quang-Tung-VN/K5-L2A-DAY02-NguyenQuangTung-2A202603080-ObjectDetection
-- Link Colab đã chạy: [Dán link Colab của bạn vào đây trước khi nộp LMS]
+- Link Colab đã chạy: https://colab.research.google.com/github/Nguyen-Quang-Tung-VN/K5-L2A-DAY02-NguyenQuangTung-2A202603080-ObjectDetection/blob/main/notebooks/day2_annotation_to_yolo.ipynb#scrollTo=3e0508d8
 
 ## 2. Schema và mini guideline
 
