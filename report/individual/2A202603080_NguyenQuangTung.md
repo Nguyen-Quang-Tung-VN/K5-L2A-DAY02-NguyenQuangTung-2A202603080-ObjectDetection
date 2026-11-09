@@ -7,19 +7,18 @@
 - Email: nguyenquangtung753@gmail.com
 - Lớp: K5-L2A
 - Link repo bài làm: https://github.com/Nguyen-Quang-Tung-VN/K5-L2A-DAY02-NguyenQuangTung-2A202603080-ObjectDetection
-- Link Colab đã chạy: https://colab.research.google.com/github/Nguyen-Quang-Tung-VN/K5-L2A-DAY02-NguyenQuangTung-2A202603080-ObjectDetection/blob/main/notebooks/day2_annotation_to_yolo.ipynb#scrollTo=3e0508d8
+- Link Colab đã chạy: https://colab.research.google.com/github/Nguyen-Quang-Tung-VN/K5-L2A-DAY02-NguyenQuangTung-2A202603080-ObjectDetection/blob/main/notebooks/day2_annotation_to_yolo.ipynb
 
 ## 2. Schema và mini guideline
 
 Dẫn tới [GUIDELINE_MINI.md](../../GUIDELINE_MINI.md). 
 
-Tóm tắt các ca mơ hồ tiêu biểu đã quyết định (chi tiết trong GUIDELINE_MINI.md):
-1. `drive_027.jpg` (Xe bị cắt rìa ảnh): Xe buýt to sát góc ảnh -> Quyết định gán `bus` (ID=2) và vẽ box bám sát pixel lộ diện chạm mép ảnh [x=0, y=H], không đoán phần ngoài khung hình.
-2. `drive_012.jpg` (Van vs Bus/Minibus): Xe thùng kín cỡ trung đậu ven đường -> Quyết định gán `van` (ID=3) do thân xe dạng hộp kín, không có hàng cửa sổ ngang liên tiếp đặc trưng của `bus`.
-3. `drive_014.jpg` (Hai xe chồng chéo / Occlusion): `truck` và `bus` đỗ sát nhau che khuất nhau -> Quyết định vẽ 2 box riêng biệt cho `truck` (ID=1) và `bus` (ID=2), bao quanh phần nhìn thấy của từng xe, không gộp chung.
-4. `drive_039.jpg` (Xe quá nhỏ ở hậu cảnh): Xe con ở xa tít chỉ có kích thước 17×8 px (148 px²) -> Quyết định bỏ qua không gán nhãn vì dưới ngưỡng nhận diện tin cậy (< 20×20 px), tránh tạo False Positive.
-5. `drive_002.jpg` (Phân biệt Truck vs Bus cùng khung hình): Cùng có kích thước to lớn -> Phân loại rạch ròi `truck` (có khoang chở hàng riêng biệt) và `bus` (thân liền khối nhiều cửa sổ ngang hành khách).
-6. `drive_024.jpg` (Bán tải pickup lớn): Thùng hàng hở phía sau nhưng cabin 4-5 chỗ giống SUV -> Quyết định gán `car` (ID=0) theo schema bán tải cabin nhỏ thuộc `car`.
+Tóm tắt các ca mơ hồ tiêu biểu đã quyết định (rút ra từ ảnh thực tế):
+1. `drive_031.jpg`: Xe con ở sát mép trái khung hình (`x1 = 0`), chỉ thấy 50% thân xe -> Quyết định gán `car` (ID=0), vẽ box chạm sát mép ảnh, không vẽ đoán phần ngoài ảnh.
+2. `drive_039.jpg`: Xe buýt và xe van lớn xuất hiện cạnh nhau ở làn xa bên phải -> Quyết định phân biệt bằng hàng cửa sổ ngang đón khách để gán `bus` (ID=2), xe thân hộp kín còn lại gán `van` (ID=3).
+3. `drive_027.jpg`: Hai xe tải lớn đi nối đuôi nhau ở làn phải (xe trước che khuất một phần cabin xe sau) -> Quyết định vẽ hai bounding box riêng biệt bao phần nhìn thấy của từng xe (`truck`, ID=1).
+4. `drive_014.jpg`: Xe con ở đáy ảnh (`y2 = 640`) chỉ thấy nắp cốp sau/mui xe -> Quyết định gán `car` (ID=0) và vẽ box chạm sát mép đáy ảnh (`y2 = 1.0`).
+5. `drive_024.jpg`: Các xe con rất nhỏ ở xa ngã tư (kích thước ~26x26 px) -> Quyết định gán `car` (ID=0) cho các xe nhận diện được hình khối ô tô, vẽ box khít pixel để đảm bảo IoU.
 
 ## 3. Annotation và self-QC
 

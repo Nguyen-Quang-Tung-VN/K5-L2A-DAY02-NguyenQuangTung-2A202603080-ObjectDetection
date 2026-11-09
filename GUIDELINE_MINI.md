@@ -8,36 +8,35 @@
 
 ---
 
-## 1. Định nghĩa lớp
+## Định nghĩa lớp
 
-| Lớp | ID | Định nghĩa chuẩn | Ví dụ / Điểm phân biệt |
-| :--- | :---: | :--- | :--- |
-| `car` | 0 | Xe cơ giới chở người cá nhân cỡ nhỏ, tối đa ~8 chỗ, thân thấp. Bao gồm sedan, hatchback, SUV, crossover, coupe, taxi và xe bán tải (pickup). | **Gán:** sedan, SUV, taxi, xe bán tải nhỏ/pickup.<br>**Không gán:** xe buýt, xe tải thùng lớn, van chở hàng, mô tô/xe gắn máy. |
-| `truck` | 1 | Xe cơ giới chở hàng hóa cỡ trung và lớn, có thùng chở hàng, container hoặc rơ-moóc rõ ràng phía sau, bao gồm xe đầu kéo (semi-truck). | **Gán:** xe tải thùng, xe tải ben, xe container, xe đầu kéo.<br>**Không gán:** xe bán tải nhỏ/pickup thuộc `car`, xe van chở hàng thùng liền thuộc `van`. |
-| `bus` | 2 | Xe chở khách công cộng hoặc du lịch liên tỉnh, thân xe dài và cao, có nhiều hàng cửa sổ ngang liên tiếp dành cho hành khách. | **Gán:** xe buýt thành phố, xe khách du lịch, minibus chở khách đông người.<br>**Không gán:** xe van chở người gia đình thuộc `van`, xe khách nhỏ ≤15 chỗ dạng thùng kín. |
-| `van` | 3 | Xe thùng kín cỡ trung, thân hộp đặc trưng với vách đứng, dùng chở hàng bưu chính hoặc chở nhóm người (minivan/panel van). | **Gán:** xe van chở hàng, minivan, xe cứu thương cỡ nhỏ.<br>**Không gán:** xe buýt lớn nhiều hàng cửa sổ (`bus`), xe con thông thường/SUV (`car`). |
-
----
-
-## 2. Quy tắc chung
-
-- **Box bám sát vật thể (Tightness):** Vẽ sát pixel ngoài cùng của phần thân xe nhìn thấy được. Tuyệt đối không lấy thêm mặt đường phía dưới, bầu trời phía trên hoặc lấn sang xe bên cạnh.
-- **Vật thể bị che khuất (Occlusion):** Nếu phần nhìn thấy được $\ge 30\%$ thân xe và đủ đặc trưng để nhận diện lớp, vẽ box bao quanh **phần nhìn thấy được**, không suy đoán phần bị che khuất. Nếu bị che khuất quá nặng ($< 30\%$) không thể xác định lớp $\rightarrow$ bỏ qua.
-- **Vật thể bị cắt bởi rìa ảnh (Truncation):** Vẽ box đến sát đúng mép ảnh (cạnh box trùng rìa ảnh $x=0$, $x=W$, $y=0$ hoặc $y=H$). Không suy đoán phần thân xe nằm ngoài khung hình.
-- **Ngưỡng kích thước xe nhỏ ở hậu cảnh:** Xe ở quá xa có diện tích quá nhỏ ($< 20 \times 20\text{ px}$ hoặc diện tích chuẩn hóa $< 0.002$) bị mờ và không thể nhận diện đặc trưng lớp chắc chắn $\rightarrow$ **bỏ qua không gán nhãn** để tránh tạo False Positives gây nhiễu cho mô hình.
-- **Vật thể không phải xe thật:** Hình ảnh phản chiếu qua kính, bóng đổ trên mặt đường, biển quảng cáo có hình xe $\rightarrow$ **không gán**.
-- **Xe đang đỗ / dừng đỗ:** Gán bình thường theo đúng chủng loại xe như xe đang di chuyển.
-- **Nhiều xe xếp hàng hoặc chồng lấn:** Mỗi xe phải có một box riêng biệt, bao trọn phần lộ diện của xe đó; tuyệt đối không gộp nhiều xe vào một bounding box.
+| Lớp | Định nghĩa của bạn | Ví dụ / điểm phân biệt |
+| --- | --- | --- |
+| `car` (ID=0) | Xe cơ giới chở người cá nhân cỡ nhỏ, tối đa ~8 chỗ, thân thấp. Bao gồm sedan, hatchback, SUV, coupe, taxi, xe bán tải cabin nhỏ (pickup). | **Gán:** sedan, SUV, taxi, xe bán tải nhỏ. **Không gán:** xe buýt, xe tải thùng lớn, van chở hàng, mô tô. |
+| `truck` (ID=1) | Xe cơ giới chở hàng hóa cỡ lớn, có thùng hoặc container rõ ràng phía sau, bao gồm xe đầu kéo (semi-truck). | **Gán:** xe tải thùng, xe container, xe đầu kéo. **Không gán:** xe bán tải nhỏ/pickup thuộc `car`, xe van chở hàng thuộc `van`. |
+| `bus` (ID=2) | Xe chở khách công cộng hoặc liên tỉnh, thân dài và cao, nhiều cửa sổ hàng ngang liên tiếp. Bao gồm minibus chở khách đông người. | **Gán:** xe buýt thành phố, xe buýt liên tỉnh, minibus chở khách. **Không gán:** van chở người thuộc `van`, xe khách nhỏ ≤15 chỗ dạng thùng kín. |
+| `van` (ID=3) | Xe thùng kín cỡ trung, dùng chở hàng hoặc chở người nhóm nhỏ, thân hộp đặc trưng. Bao gồm minivan và xe tải nhỏ kiểu van. | **Gán:** xe van chở hàng, minivan, xe chở người nhóm nhỏ dạng thùng kín. **Không gán:** xe buýt lớn nhiều hàng cửa sổ (`bus`), xe con thông thường (`car`). |
 
 ---
 
-## 3. Ghi lại quyết định cho các ca mơ hồ tiêu biểu (Rút ra từ ảnh thực tế)
+## Quy tắc chung
 
-| Ảnh | Tình huống mơ hồ | Quyết định cuối | Lý do theo schema |
-| :--- | :--- | :--- | :--- |
-| `drive_027.jpg` | **Xe bị cắt bởi rìa ảnh:** Xe buýt lớn xuất hiện sát góc dưới bên trái, bị cắt mép trái và mép dưới khung hình. | Gán `bus` (ID=2), vẽ box chạm sát mép ảnh `[x=0, y=H]`. | Cạnh box bám sát pixel ngoài cùng còn nhìn thấy được; cạnh trái trùng mép trái và cạnh dưới chạm mép dưới ảnh. Tuyệt đối không tự suy đoán phần thân xe nằm ngoài khung hình. |
-| `drive_012.jpg` | **Van vs Bus/Minibus:** Xe thùng kín cỡ trung đậu ven đường, không rõ là xe van chở hàng hay minibus chở khách vì góc chụp từ phía đuôi xe. | Gán `van` (ID=3) | Thân xe dạng khối hộp kín, tỷ lệ dài/cao trung bình, không có dãy cửa sổ hành khách ngang liên tiếp đặc trưng của `bus`. Theo schema: thân hộp kín không phải bus lớn thì thuộc `van`. |
-| `drive_014.jpg` | **Hai xe chồng chéo / che khuất (Occlusion):** Xe tải chở hàng (`truck`) và xe buýt (`bus`) đỗ rất sát nhau, phần thân che khuất nhau đáng kể. | Gán 2 box riêng biệt cho `truck` (ID=1) và `bus` (ID=2). | Cả hai xe đều lộ trên 30% thân xe và nhận diện rõ lớp. Vẽ hai box riêng bám sát phần nhìn thấy của từng xe, không gộp và không vẽ lấn sang nhau. |
-| `drive_039.jpg` | **Xe quá nhỏ ở hậu cảnh (Kích thước biên):** Xe con ở rất xa tít chân trời, diện tích box chỉ khoảng 17×8 px (148 px²), mờ và mất chi tiết nhận dạng. | **Bỏ qua, không gán nhãn.** | Kích thước dưới ngưỡng nhận diện tin cậy (< 20×20 px), không thể xác định rõ chi tiết phân loại và dễ gây nhiễu False Positive cho detector YOLO. |
-| `drive_002.jpg` | **Truck vs Bus cùng xuất hiện trong một cảnh:** Cùng có kích thước to lớn và góc nhìn chéo tương đồng. | Phân loại rạch ròi `truck` (ID=1) và `bus` (ID=2). | Nhận diện dựa trên cấu trúc chức năng: `truck` có cabin rời và khoang/thùng chở hàng riêng biệt phía sau; `bus` có thân liền khối với nhiều hàng cửa sổ kính dành cho hành khách. |
-| `drive_024.jpg` | **Xe bán tải (Pickup) cỡ lớn:** Thùng hàng hở phía sau nhưng cabin 4-5 chỗ giống SUV. | Gán `car` (ID=0) | Schema quy định rõ: xe bán tải/cabin nhỏ thuộc `car`, không phải `truck`. `Truck` chỉ dành cho xe tải chở hàng lớn, xe container hoặc đầu kéo. |
+- **Box bám sát vật thể** nghĩa là: vẽ sát phần thân xe nhìn thấy được — không lấy thêm mặt đường phía dưới, bầu trời phía trên, hoặc phần thân xe bên cạnh. Cạnh box trùng hoặc sát pixel ngoài cùng của xe.
+- **Vật thể bị che khuất:** vẽ box quanh phần nhìn thấy được nếu đủ để xác định lớp (nhìn thấy ít nhất ~30% thân xe và nhận diện được loại). Không đoán phần bị che; box chỉ bao phần lộ ra.
+- **Vật thể bị cắt bởi rìa ảnh:** vẽ box đến đúng rìa ảnh — cạnh box trùng mép ảnh, không đoán phần nằm ngoài khung hình.
+- **Vật thể rất nhỏ/mờ hồ:** nếu không xác định rõ lớp do kích thước quá nhỏ hoặc bị mờ — **bỏ qua, không gán**. Nếu kích thước đủ nhưng lớp mơ hồ (ví dụ van vs bus), ghi vào bảng quyết định dưới và hỏi giảng viên; tạm thời chọn lớp có khả năng cao nhất và đánh dấu để review.
+- **Phản chiếu/bóng/biển quảng cáo có hình xe:** không gán. Chỉ gán xe thật hiện diện trong cảnh.
+- **Xe đang đỗ:** gán bình thường theo loại xe, giống xe đang chạy.
+- **Nhiều xe chồng lên nhau:** mỗi xe một box riêng, bao phần nhìn thấy của từng xe.
+
+---
+
+## Ghi lại quyết định cho các ca mơ hồ tiêu biểu (Rút ra từ ảnh thực tế)
+
+| Ảnh | Tình huống | Quyết định cuối | Lý do theo schema |
+| --- | --- | --- | --- |
+| `drive_031.jpg` | Xe con sát mép trái khung hình (`x1 = 0.0`), chỉ nhìn thấy khoảng 50% thân xe bên phải, nửa bên trái nằm ngoài ảnh. | Gán `car` (ID=0), vẽ box chạm mép ảnh (`x1 = 0`). | Vật thể bị cắt bởi rìa ảnh: box ôm sát phần nhìn thấy và cạnh box trùng sát mép ảnh, không vẽ box đoán phần ngoài khung. Phần lộ ra có đủ đặc trưng đèn sau và kính của xe con. |
+| `drive_039.jpg` | Ở làn đường phía xa bên phải xuất hiện 2 xe lớn: xe buýt và xe van cỡ lớn đứng cạnh nhau, xe van có chiều cao và kích thước thân hộp gần tương đương xe buýt. | Gán xe bên trái là `bus` (ID=2); gán xe thân hộp kín bên phải là `van` (ID=3). | Xe buýt (`bus`) có đặc trưng thân dài và nhiều ô cửa sổ ngang liên tiếp. Xe còn lại dạng thân hộp đặc, vách kín không có dãy cửa sổ hành khách nên thuộc nhóm `van` (xe thùng kín chở hàng/minivan). |
+| `drive_027.jpg` | Hai xe tải lớn đi nối đuôi nhau ở làn phải: xe tải phía trước che khuất một phần cabin và đầu của xe tải đi ngay sau nó. | Gán cả hai xe là `truck` (ID=1), vẽ hai bounding box riêng biệt. | Quy tắc che khuất (occlusion): vẽ hai box độc lập bao phần nhìn thấy của từng xe, không gộp làm một box lớn. Xe đi sau dù bị che cabin nhưng thùng hàng và bánh xe lộ diện rõ (>30%) đủ nhận diện là xe tải chở hàng. |
+| `drive_014.jpg` | Ở góc dưới màn hình (`y2 = 640`), xe con màu bạc đi sát phía trước camera chỉ lộ phần nắp cốp sau/mui xe, còn cản dưới và bánh xe bị cắt khỏi mép đáy ảnh. | Gán `car` (ID=0), vẽ box chạm mép đáy ảnh (`y2 = 1.0`). | Vật thể thuộc phạm vi camera góc rộng, phần nhìn thấy có đầy đủ đặc trưng đèn hậu và kính sau xe con (`car`). Box kéo sát đến pixel mép đáy của ảnh, không suy đoán phần gầm xe ngoài ảnh. |
+| `drive_024.jpg` | Ở ngã tư phía xa có nhiều xe con chạy/đỗ ở làn đối diện với kích thước rất nhỏ (chỉ khoảng 26×26 pixel = 676 px²), độ phân giải thấp. | Gán `car` (ID=0) cho các xe thấy rõ hình dáng; bỏ qua các vệt mờ dưới 15px. | Vật thể kích thước nhỏ nhưng vẫn nhận diện được kết cấu mui xe và đèn xe; vẽ box vừa khít từng cụm pixel của xe, tránh để box quá rộng gây giảm độ bám sát (IoU). |
