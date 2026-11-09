@@ -14,11 +14,11 @@
 Dẫn tới [GUIDELINE_MINI.md](../../GUIDELINE_MINI.md). 
 
 Tóm tắt các ca mơ hồ tiêu biểu đã quyết định (rút ra từ ảnh thực tế):
-1. `drive_031.jpg`: Xe con ở sát mép trái khung hình (`x1 = 0`), chỉ thấy 50% thân xe -> Quyết định gán `car` (ID=0), vẽ box chạm sát mép ảnh, không vẽ đoán phần ngoài ảnh.
-2. `drive_039.jpg`: Xe buýt và xe van lớn xuất hiện cạnh nhau ở làn xa bên phải -> Quyết định phân biệt bằng hàng cửa sổ ngang đón khách để gán `bus` (ID=2), xe thân hộp kín còn lại gán `van` (ID=3).
-3. `drive_027.jpg`: Hai xe tải lớn đi nối đuôi nhau ở làn phải (xe trước che khuất một phần cabin xe sau) -> Quyết định vẽ hai bounding box riêng biệt bao phần nhìn thấy của từng xe (`truck`, ID=1).
-4. `drive_014.jpg`: Xe con ở đáy ảnh (`y2 = 640`) chỉ thấy nắp cốp sau/mui xe -> Quyết định gán `car` (ID=0) và vẽ box chạm sát mép đáy ảnh (`y2 = 1.0`).
-5. `drive_024.jpg`: Các xe con rất nhỏ ở xa ngã tư (kích thước ~26x26 px) -> Quyết định gán `car` (ID=0) cho các xe nhận diện được hình khối ô tô, vẽ box khít pixel để đảm bảo IoU.
+1. `drive_014.jpg`: Xe con ở đáy ảnh (`y2 = 640`) chỉ thấy nắp cốp sau/mui xe -> Quyết định gán `car` (ID=0) và vẽ box chạm sát mép đáy ảnh (`y2 = 1.0`).
+2. `drive_024.jpg`: Các xe con rất nhỏ ở xa ngã tư (kích thước ~26x26 px) -> Quyết định gán `car` (ID=0) cho các xe nhận diện được hình khối ô tô, vẽ box khít pixel để đảm bảo IoU.
+3. `drive_002.jpg`: Xe tải ở sát mép phải ảnh bị mép khung hình cắt ngang qua thân xe (`x2 = 640`) -> Quyết định gán `truck` (ID=1) và vẽ box chạm sát mép phải ảnh, không vẽ box suy đoán cabin đầu xe ngoài ảnh.
+4. `drive_046.jpg`: Xe buýt lớn ở giữa đường có 2 tai gương chiếu hậu dài -> Quyết định gán `bus` (ID=2) và vẽ box ôm khít thân vỏ chính, không kéo rộng box sang hai bên để lấy tai gương mỏng tránh làm giảm IoU.
+5. `drive_001.jpg`: Các xe ở chiều ngược lại phía sau dải phân cách bê tông trên cao tốc -> Quyết định không gán nhãn, chỉ gán 5 xe trên luồng di chuyển cùng chiều phục vụ bài toán ADAS.
 
 ## 3. Annotation và self-QC
 
