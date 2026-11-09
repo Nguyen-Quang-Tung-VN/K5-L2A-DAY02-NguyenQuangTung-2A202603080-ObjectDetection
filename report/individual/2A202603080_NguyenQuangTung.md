@@ -13,10 +13,13 @@
 
 Dẫn tới [GUIDELINE_MINI.md](../../GUIDELINE_MINI.md). 
 
-Tóm tắt ba ca mơ hồ đã quyết định:
-1. `drive_012.jpg`: Xe thùng kín cỡ trung đậu ven đường -> Quyết định gán `van` (ID=3) do thân xe dạng hộp kín, không có hàng cửa sổ ngang liên tiếp đặc trưng của `bus`.
-2. `drive_024.jpg`: Xe bán tải (pickup) lớn, cabin to và thùng sau hở -> Quyết định gán `car` (ID=0) vì theo schema bán tải/cabin nhỏ thuộc `car`, không phải `truck`.
-3. `drive_031.jpg`: Đầu xe tải nhô ra sau xe buýt, bị che khuất ~70% -> Quyết định gán `truck` (ID=1) và vẽ box bao quanh ~30% phần cabin nhìn thấy được theo quy tắc bám sát phần lộ diện.
+Tóm tắt các ca mơ hồ tiêu biểu đã quyết định (chi tiết trong GUIDELINE_MINI.md):
+1. `drive_027.jpg` (Xe bị cắt rìa ảnh): Xe buýt to sát góc ảnh -> Quyết định gán `bus` (ID=2) và vẽ box bám sát pixel lộ diện chạm mép ảnh [x=0, y=H], không đoán phần ngoài khung hình.
+2. `drive_012.jpg` (Van vs Bus/Minibus): Xe thùng kín cỡ trung đậu ven đường -> Quyết định gán `van` (ID=3) do thân xe dạng hộp kín, không có hàng cửa sổ ngang liên tiếp đặc trưng của `bus`.
+3. `drive_014.jpg` (Hai xe chồng chéo / Occlusion): `truck` và `bus` đỗ sát nhau che khuất nhau -> Quyết định vẽ 2 box riêng biệt cho `truck` (ID=1) và `bus` (ID=2), bao quanh phần nhìn thấy của từng xe, không gộp chung.
+4. `drive_039.jpg` (Xe quá nhỏ ở hậu cảnh): Xe con ở xa tít chỉ có kích thước 17×8 px (148 px²) -> Quyết định bỏ qua không gán nhãn vì dưới ngưỡng nhận diện tin cậy (< 20×20 px), tránh tạo False Positive.
+5. `drive_002.jpg` (Phân biệt Truck vs Bus cùng khung hình): Cùng có kích thước to lớn -> Phân loại rạch ròi `truck` (có khoang chở hàng riêng biệt) và `bus` (thân liền khối nhiều cửa sổ ngang hành khách).
+6. `drive_024.jpg` (Bán tải pickup lớn): Thùng hàng hở phía sau nhưng cabin 4-5 chỗ giống SUV -> Quyết định gán `car` (ID=0) theo schema bán tải cabin nhỏ thuộc `car`.
 
 ## 3. Annotation và self-QC
 
