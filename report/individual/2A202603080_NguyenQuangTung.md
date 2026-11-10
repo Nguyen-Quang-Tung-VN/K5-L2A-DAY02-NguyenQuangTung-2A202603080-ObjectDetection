@@ -16,15 +16,15 @@ Dẫn tới [GUIDELINE_MINI.md](../../GUIDELINE_MINI.md).
 Tóm tắt các ca mơ hồ tiêu biểu đã quyết định (rút ra từ ảnh thực tế):
 1. `drive_014.jpg`: Xe con ở đáy ảnh (`y2 = 640`) chỉ thấy nắp cốp sau/mui xe -> Quyết định gán `car` (ID=0) và vẽ box chạm sát mép đáy ảnh (`y2 = 1.0`).
 2. `drive_024.jpg`: Các xe con rất nhỏ ở xa ngã tư (kích thước ~26x26 px) -> Quyết định gán `car` (ID=0) cho các xe nhận diện được hình khối ô tô, vẽ box khít pixel để đảm bảo IoU.
-3. `drive_002.jpg`: Xe tải ở sát mép phải ảnh bị mép khung hình cắt ngang qua thân xe (`x2 = 640`) -> Quyết định gán `truck` (ID=1) và vẽ box chạm sát mép phải ảnh, không vẽ box suy đoán cabin đầu xe ngoài ảnh.
-4. `drive_046.jpg`: Xe buýt lớn ở giữa đường có 2 tai gương chiếu hậu dài -> Quyết định gán `bus` (ID=2) và vẽ box ôm khít thân vỏ chính, không kéo rộng box sang hai bên để lấy tai gương mỏng tránh làm giảm IoU.
-5. `drive_001.jpg`: Các xe ở chiều ngược lại phía sau dải phân cách bê tông trên cao tốc -> Quyết định không gán nhãn, chỉ gán 5 xe trên luồng di chuyển cùng chiều phục vụ bài toán ADAS.
+3. `drive_008.jpg`: Xe tải ben chở đất đá màu đỏ ở ngã tư có đống đất đá nhô cao khỏi thùng -> Quyết định gán `truck` (ID=1) và vẽ box bao trọn cả thân xe và đống đất đá chở trên thùng xe để phản ánh đúng không gian chiếm dụng của phương tiện.
+4. `drive_011.jpg`: Xe máy shipper đi cạnh xe buýt lớn có gắn thùng giao hàng màu vàng rất to phía sau -> Quyết định không gán nhãn (bỏ qua), vì phương tiện 2 bánh nằm ngoài phạm vi 4 lớp schema kể cả khi có thùng hàng.
+5. `drive_009.jpg`: Xe tải bưu chính màu xanh lá cây (`China Post`) có thùng kín riêng biệt gắn trên khung gầm di chuyển cạnh xe buýt đỏ -> Quyết định gán `truck` (ID=1) do có cabin tách rời và thùng chở hàng riêng biệt, phân biệt rõ với xe van thân liền khối.
 
 ## 3. Annotation và self-QC
 
 - Số file nhãn train: 50 file (`drive_001.txt` đến `drive_050.txt`).
 - Kết quả checker và lỗi đã xử lý: Chạy `python tools/check_yolo_labels.py` ĐẠT 50/50 file. Đã xử lý lỗi lồng thư mục xuất từ CVAT (`labels/train/labels/train/`) và loại bỏ các file thừa (`train.txt`, `data.yaml`).
-- Danh sách ít nhất 10 ảnh đã rà bằng mắt: `drive_001.jpg`, `drive_002.jpg`, `drive_005.jpg`, `drive_012.jpg`, `drive_014.jpg`, `drive_024.jpg`, `drive_027.jpg`, `drive_031.jpg`, `drive_039.jpg`, `drive_048.jpg`.
+- Danh sách ít nhất 10 ảnh đã rà bằng mắt: `drive_001.jpg`, `drive_002.jpg`, `drive_005.jpg`, `drive_008.jpg`, `drive_009.jpg`, `drive_011.jpg`, `drive_014.jpg`, `drive_024.jpg`, `drive_039.jpg`, `drive_048.jpg`.
 - Lỗi bỏ sót/box/class phát hiện khi rà và cách sửa: Phát hiện một số box bị lỏng ở cạnh mép ảnh; xe ở rất xa bị mô hình auto-label detect nhầm thành car; xe bán tải bị gán nhầm sang truck. Đã điều chỉnh box bám sát pixel mép xe và chuẩn hóa theo schema.
 - Commit khóa nhãn ban đầu: `5caef93`
 
